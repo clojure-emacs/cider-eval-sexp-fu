@@ -16,10 +16,13 @@ connected to an nREPL via [CIDER][].
 
 ## Install
 
-The package is not yet available in [MELPA][] repositories.
-Check back soon for news.
+The package is available in [MELPA][].
 
-You can easily install it by opening `cider-eval-sexp-fu.el` in Emacs and call
+If you have MELPA in your `package-archives` variable, just use
+
+    M-x package-install RET vi-tilde-fringe-mode RET
+
+If you don't, open `vi-tilde-fringe.el` in Emacs and call
 `package-install-from-buffer`.
 
 ## Usage
