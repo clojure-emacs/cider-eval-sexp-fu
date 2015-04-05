@@ -20,10 +20,10 @@ The package is available in [MELPA][].
 
 If you have MELPA in your `package-archives` variable, just use
 
-    M-x package-install RET vi-tilde-fringe-mode RET
+    M-x package-install RET cider-eval-sexp-fu RET
 
-If you don't, open `vi-tilde-fringe.el` in Emacs and call
-`package-install-from-buffer`.
+If you don't, open `cider-eval-sexp-fu.el` in Emacs and invoke
+`M-x package-install-from-buffer`.
 
 ## Usage
 
