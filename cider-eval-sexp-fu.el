@@ -1,4 +1,4 @@
-;;; cider-eval-sexp-fu.el --- Briefly highlights an evaluated sexps.
+;;; cider-eval-sexp-fu.el --- Briefly highlights an evaluated sexp.
 
 ;; Adapted from Sam Aaron's code found in emacs-live in order to
 ;; be distributable as a package by syl20bnr.
@@ -38,7 +38,7 @@
 (defun cider-esf--bounds-of-last-sexp ()
   "Return the bounds of the defun around point.
 
-Copies semantics directly from the fn cider-last-sexp to ensure highlighted
+Copies semantics directly from `cider-last-sexp' to ensure highlighted
 area is identical to that which is evaluated."
   (cons (save-excursion
           (backward-sexp)
@@ -46,6 +46,7 @@ area is identical to that which is evaluated."
         (point)))
 
 (defun cider-esf--initialize-cider ()
+  "Initialize the CIDER integration for eval-sexp-fu."
   (define-eval-sexp-fu-flash-command cider-eval-last-sexp
     (eval-sexp-fu-flash (cider-esf--bounds-of-last-sexp)))
   (define-eval-sexp-fu-flash-command cider-pprint-eval-last-sexp
