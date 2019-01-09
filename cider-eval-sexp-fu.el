@@ -7,7 +7,7 @@
 ;; Keywords: languages, clojure, cider
 ;; Created: 20 Mar 2015
 ;; Version: 1.1
-;; Package-Requires: ((emacs "24") (highlight "0") (eval-sexp-fu "0.4.0"))
+;; Package-Requires: ((emacs "24") (eval-sexp-fu "0.5.0"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -32,7 +32,6 @@
 
 ;;; Code:
 
-(require 'highlight)
 (require 'eval-sexp-fu)
 
 (defun cider-esf--bounds-of-last-sexp ()
