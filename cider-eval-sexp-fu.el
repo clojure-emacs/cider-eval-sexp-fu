@@ -52,7 +52,7 @@ area is identical to that which is evaluated."
     (eval-sexp-fu-flash (cider-esf--bounds-of-last-sexp)))
   (define-eval-sexp-fu-flash-command cider-eval-defun-at-point
     (eval-sexp-fu-flash (let ((bounds (cider-defun-at-point 'bounds)))
-                          (cons (first bounds) (second bounds)))))
+                          (cons (nth 0 bounds) (nth 1 bounds)))))
 
   ;; Defines:
   ;; `eval-sexp-fu-cider-sexp-inner-list',
