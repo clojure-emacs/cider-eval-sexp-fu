@@ -7,7 +7,7 @@
 ;; Keywords: languages, clojure, cider
 ;; Created: 20 Mar 2015
 ;; Version: 1.2
-;; Package-Requires: ((emacs "24") (eval-sexp-fu "0.5.0"))
+;; Package-Requires: ((emacs "25.1") (eval-sexp-fu "0.5.0"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -33,35 +33,25 @@
 ;;; Code:
 
 (require 'eval-sexp-fu)
+(require 'cl-lib)
 
-(defun cider-esf--bounds-of-last-sexp ()
-  "Return the bounds of the defun around point.
-
-Copies semantics directly from `cider-last-sexp' to ensure highlighted
-area is identical to that which is evaluated."
-  (cons (save-excursion
-          (backward-sexp)
-          (point))
-        (point)))
+(defun cider-esf--interactive-eval-advice (f &rest args)
+  "Around advice for `cider-interactive-eval'.
+If bounds are provided in the arguments, use them as the region to flash,
+otherwise flash the current line."
+  (if eval-sexp-fu-flash-mode
+      (cl-destructuring-bind (_form &optional _callback bounds _additional-params) args
+        (let ((esf-bounds (if bounds (cons (car bounds) (cadr bounds))
+                            ;; Some invocations pass the form to be evaled as a string, instead of the buffer bounds.
+                            (cons (line-beginning-position) (line-end-position)))))
+          (cl-multiple-value-bind (_bounds hi unhi eflash)
+              (eval-sexp-fu-flash esf-bounds)
+            (esf-flash-doit (esf-konstantly (apply f args)) hi unhi eflash))))
+    (apply f args)))
 
 (defun cider-esf--initialize-cider ()
   "Initialize the CIDER integration for eval-sexp-fu."
-  (define-eval-sexp-fu-flash-command cider-eval-last-sexp
-    (eval-sexp-fu-flash (cider-esf--bounds-of-last-sexp)))
-  (define-eval-sexp-fu-flash-command cider-pprint-eval-last-sexp
-    (eval-sexp-fu-flash (cider-esf--bounds-of-last-sexp)))
-  (define-eval-sexp-fu-flash-command cider-eval-defun-at-point
-    (eval-sexp-fu-flash (let ((bounds (cider-defun-at-point 'bounds)))
-                          (cons (car bounds) (cadr bounds)))))
-
-  ;; Defines:
-  ;; `eval-sexp-fu-cider-sexp-inner-list',
-  ;; `eval-sexp-fu-cider-sexp-inner-sexp'
-  ;; and the pprint variants respectively.
-  (define-eval-sexp-fu-eval-sexp eval-sexp-fu-cider-eval-sexp
-    cider-eval-last-sexp)
-  (define-eval-sexp-fu-eval-sexp eval-sexp-fu-cider-pprint-eval-sexp
-    cider-pprint-eval-last-sexp))
+  (advice-add 'cider-interactive-eval :around #'cider-esf--interactive-eval-advice))
 
 (eval-after-load 'cider
   '(cider-esf--initialize-cider))
